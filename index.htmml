@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Description Parser</title>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .dropzone {
+            border: 2px dashed #ccc;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Job Description Name-Value Extractor</h1>
+    <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
+    <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
+    <br>
+    <button onclick="parseDescription()">Extract Name-Value Pairs</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+    <h2>Extracted Pairs</h2>
+    <pre id="output"></pre>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.background = '#eee';
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.background = '';
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.background = '';
+            const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+
+            if (file.name.endsWith('.txt')) {
+                reader.onload = function(event) {
+                    document.getElementById('jobDesc').value = event.target.result;
+                };
+                reader.readAsText(file);
+            } else if (file.name.endsWith('.pdf')) {
+                const fileReader = new FileReader();
+                fileReader.onload = function() {
+                    const typedarray = new Uint8Array(this.result);
+                    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+                        let text = '';
+                        let pages = [];
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            pages.push(pdf.getPage(i).then(page => {
+                                return page.getTextContent().then(content => {
+                                    return content.items.map(item => item.str).join(' ');
+                                });
+                            }));
+                        }
+                        Promise.all(pages).then(contents => {
+                            text = contents.join('\n');
+                            document.getElementById('jobDesc').value = text;
+                        });
+                    });
+                };
+                fileReader.readAsArrayBuffer(file);
+            } else if (file.name.endsWith('.docx')) {
+                reader.onload = function(event) {
+                    mammoth.extractRawText({ arrayBuffer: event.target.result })
+                        .then(result => {
+                            document.getElementById('jobDesc').value = result.value;
+                        });
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        function parseDescription() {
+            const text = document.getElementById('jobDesc').value;
+            const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+            const pairs = [];
+
+            const categories = [
+                { name: 'Job Title', keywords: ['title', 'position'] },
+                { name: 'Experience', keywords: ['experience', 'years'] },
+                { name: 'Skills', keywords: ['skills', 'technologies', 'tools'] },
+                { name: 'Responsibilities', keywords: ['responsible', 'responsibilities', 'role', 'duties'] },
+                { name: 'Education', keywords: ['degree', 'education', 'bachelor', 'master'] },
+                { name: 'Certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
+                { name: 'Soft Skills', keywords: ['communication', 'problem-solving', 'leadership', 'team'] }
+            ];
+
+            for (const line of lines) {
+                for (const category of categories) {
+                    for (const keyword of category.keywords) {
+                        const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                        if (regex.test(line)) {
+                            pairs.push({ name: category.name, value: line });
+                            break;
+                        }
+                    }
+                }
+            }
+
+            const seen = new Set();
+            const uniquePairs = [];
+
+            for (const pair of pairs) {
+                const key = `${pair.name}:${pair.value}`;
+                if (!seen.has(key)) {
+                    uniquePairs.push(pair);
+                    seen.add(key);
+                }
+            }
+
+            window.extractedPairs = uniquePairs;
+            document.getElementById('output').textContent = JSON.stringify(uniquePairs, null, 2);
+        }
+
+        function downloadCSV() {
+            if (!window.extractedPairs || window.extractedPairs.length === 0) return;
+            const headers = ['Name', 'Value'];
+            const rows = window.extractedPairs.map(pair => `"${pair.name}","${pair.value.replace(/"/g, '""')}"`);
+            const csvContent = [headers.join(','), ...rows].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'name_value_pairs.csv');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
