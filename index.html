@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v4</h1>
+    <h1>Job Description Name-Value Extractor - v6</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -188,7 +188,7 @@
             for (const line of lines) {
                 var lowerLine = line.toLower();
                 var currentCategory = "";
-                var currentCategoryDelimiterOffset                
+                var currentCategoryDelimiterOffset;                
                 alert(lowerLine);
                 if (lowerLine.atOffset("description") >= 0)
                     break; // ignore lines which likely contain no name-value pairs or category declarations
@@ -206,7 +206,7 @@
                     
                 if (currentCategoryDelimiterOffset >= 0) {
                     // Most likely a standalone name-value pair rather than a bulletpoint
-                    currentCategory = lowerLine.substring(0,
+                    currentCategory = lowerLine.substring(0,currentCategoryDelimiterOffset);
                     currentValue = lowerLine.substring(currentCategoryDelimiterOffset+1).trim();
                     for (const category of categories) {
                         for (const keyword of category.keywords) {
