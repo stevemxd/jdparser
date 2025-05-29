@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v3</h1>
+    <h1>Job Description Name-Value Extractor - v4</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -130,11 +130,11 @@
             
             if (firstSpace < firstTab) {
                 lineP1 = line.substring(0,firstSpace);
-                lineP2 = line.subString(firstSpace);
+                lineP2 = line.substring(firstSpace);
                 alert("starts with space");
             } else if (firstTab < firstSpace) {
                 lineP1 = line.substring(0,firstTab);
-                lineP2 = line.subString(firstTab);
+                lineP2 = line.substring(firstTab);
                 alert("starts with tab");
             }
             else {
