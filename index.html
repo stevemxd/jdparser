@@ -131,7 +131,7 @@
                 var lineP1 = '';
                 var lineP2 = trimmedLine;
             }
-            if (checkBulletCharacters)
+            if (checkBulletCharacters(lineP2))
                 return trim(lineP2);
             else
                 return trimmedLine;
