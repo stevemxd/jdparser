@@ -117,6 +117,10 @@
         }
 
         function removeBulletCharacters(line) {
+            return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
+        }
+
+        function removeBulletCharacters1(line) {
             return line;
             
             var trimmedLine = line.trim();
