@@ -128,20 +128,27 @@
             var lineP1;
             var lineP2;
             
-            if (firstSpace < firstTab) {
-                lineP1 = line.substring(0,firstSpace);
-                lineP2 = line.substring(firstSpace);
-                alert("starts with space");
-            } else if (firstTab < firstSpace) {
-                lineP1 = line.substring(0,firstTab);
-                lineP2 = line.substring(firstTab);
-                alert("starts with tab");
+            if (firstSpace > 0 && firstTab > 0) {
+                if (firstSpace < firstTab) {
+                    lineP1 = line.substring(0,firstSpace);
+                    lineP2 = line.substring(firstSpace);
+                } else { // (firstTab < firstSpace) 
+                    lineP1 = line.substring(0,firstTab);
+                    lineP2 = line.substring(firstTab);
+                }
+            } else {
+                if (firstSpace >= 0 && firstTab == -1) {
+                    lineP1 = line.substring(0,firstSpace);
+                    lineP2 = line.substring(firstSpace);
+                } else if (firstTab >= 0 && firstSpace == -1) {
+                    lineP1 = line.substring(0,firstTab);
+                    lineP2 = line.substring(firstTab);
+                } else {
+                    lineP1 = '';
+                    lineP2 = trimmedLine;
+                }
             }
-            else {
-                lineP1 = '';
-                lineP2 = trimmedLine;
-                alert("no space or tab");
-            }
+            
             if (checkBulletCharacters(lineP2)) {
                 alert("bulletpoint found");
                 return lineP2.trim();
