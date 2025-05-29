@@ -126,19 +126,24 @@
             if (firstSpace < firstTab) {
                 lineP1 = line.substring(0,firstSpace);
                 lineP2 = line.subString(firstSpace);
+                alert("starts with space");
             } else if (firstTab < firstSpace) {
                 lineP1 = line.substring(0,firstTab);
                 lineP2 = line.subString(firstTab);
+                alert("starts with tab");
             }
             else {
                 lineP1 = '';
                 lineP2 = trimmedLine;
+                alert("no space or tab");
             }
-            if (checkBulletCharacters(lineP2))
+            if (checkBulletCharacters(lineP2)) {
+                alert("bulletpoint found");
                 return lineP2.trim();
-            else
+            } else {
+                alert("bulletpoint not found");
                 return trimmedLine;
-            
+            }          
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
         }
 
