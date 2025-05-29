@@ -99,9 +99,14 @@
             }
         });
 
+        function removeBulletCharacters(line) {
+            return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
+        }
+
         function parseDescription() {
             const text = document.getElementById('jobDesc').value;
-            const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+            const lines = text.split('\n').map(line => removeBulletCharacters(line.trim())).filter(Boolean);
+
             const pairs = [];
 
             const categories = [
