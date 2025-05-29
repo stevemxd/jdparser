@@ -99,8 +99,44 @@
             }
         });
 
+        function checkBulletCharacters(str) {
+          var chars = ['-','•','*',\u2022,\u2023,\u25E6,\u2043,\u2219];
+          if (typeof str !== 'string' || !Array.isArray(chars)) {
+            throw new Error('Invalid input: str must be a string and chars must be an array.');
+          }
+
+          for (let char of chars) {
+                if (typeof char !== 'string' || char.length !== 1) {
+                    throw new Error('Invalid input: chars must be an array of single-character strings.');
+                }
+                if (str.includes(char)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         function removeBulletCharacters(line) {
-            return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
+            var trimmedLine = line.trim();
+            var firstSpace = line.indexOf(' ');
+            var firstTab = line.indexOf(\u0009);
+            if (firstSpace < firstTab) {
+                var lineP1 = line.substring(0,firstSpace);
+                var lineP2 = line.subString(firstSpace);
+            } else if (firstTab < firstSpace) {
+                var lineP1 = line.substring(0,firstTab);
+                var lineP2 = line.subString(firstTab);
+            }
+            else {
+                var lineP1 = '';
+                var lineP2 = trimmedLine;
+            }
+            if (checkBulletCharacters)
+                return trim(lineP2);
+            else
+                return trimmedLine;
+            
+            //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
         }
 
         function parseDescription() {
@@ -113,7 +149,7 @@
                 { name: 'Job Title', keywords: ['title', 'position', 'role'] },
                 { name: 'Location', keywords: ['location', 'based in'] },
                 { name: 'Experience', keywords: ['experience', 'years'] },
-                { name: 'Skillz', keywords: ['skillz', 'technologies', 'tools'] },
+                { name: 'Skills', keywords: ['skills', 'technologies', 'tools'] },
                 { name: 'Responsibilities', keywords: ['responsible', 'responsibilities', 'duties'] },
                 { name: 'Education', keywords: ['degree', 'education', 'bachelor', 'master'] },
                 { name: 'Certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
