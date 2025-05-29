@@ -100,7 +100,7 @@
         });
 
         function checkBulletCharacters(str) {
-          var chars = ['-','•','*',\u2022,\u2023,\u25E6,\u2043,\u2219];
+          var chars = ['-','•','*','\u2022','\u2023','\u25E6','\u2043','\u2219'];
           if (typeof str !== 'string' || !Array.isArray(chars)) {
             throw new Error('Invalid input: str must be a string and chars must be an array.');
           }
@@ -115,21 +115,24 @@
             }
             return false;
         }
-        
+
         function removeBulletCharacters(line) {
             var trimmedLine = line.trim();
             var firstSpace = line.indexOf(' ');
-            var firstTab = line.indexOf(\u0009);
+            var firstTab = line.indexOf('\u0009');
+            var lineP1;
+            var lineP2;
+            
             if (firstSpace < firstTab) {
-                var lineP1 = line.substring(0,firstSpace);
-                var lineP2 = line.subString(firstSpace);
+                lineP1 = line.substring(0,firstSpace);
+                lineP2 = line.subString(firstSpace);
             } else if (firstTab < firstSpace) {
-                var lineP1 = line.substring(0,firstTab);
-                var lineP2 = line.subString(firstTab);
+                lineP1 = line.substring(0,firstTab);
+                lineP2 = line.subString(firstTab);
             }
             else {
-                var lineP1 = '';
-                var lineP2 = trimmedLine;
+                lineP1 = '';
+                lineP2 = trimmedLine;
             }
             if (checkBulletCharacters(lineP2))
                 return trim(lineP2);
