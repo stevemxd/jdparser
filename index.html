@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v2</h1>
+    <h1>Job Description Name-Value Extractor - v3</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -124,7 +124,7 @@
         function removeBulletCharacters(line) {
             var trimmedLine = line.trim();
             var firstSpace = line.indexOf(' ');
-            var firstTab = line.indexOf('\u0009');
+            var firstTab = line.indexOf('\t');
             var lineP1;
             var lineP2;
             
