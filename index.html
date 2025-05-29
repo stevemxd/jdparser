@@ -116,12 +116,12 @@
             return false;
         }
 
-        function removeBulletCharacters(line) {
+        function removeBulletCharacters2(line) {
            // return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
            return line; 
         }
 
-        function removeBulletCharacters1(line) {
+        function removeBulletCharacters(line) {
             return line;
             
             var trimmedLine = line.trim();
@@ -161,7 +161,7 @@
             const pairs = [];
 
             const categories = [
-                { name: 'Job Title', keywords: ['title', 'position', 'role'] },
+                { name: 'Job-Title', keywords: ['title', 'position', 'role'] },
                 { name: 'Location', keywords: ['location', 'based in'] },
                 { name: 'Experience', keywords: ['experience', 'years'] },
                 { name: 'Skills', keywords: ['skills', 'technologies', 'tools'] },
