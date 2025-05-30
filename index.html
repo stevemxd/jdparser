@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v7</h1>
+    <h1>Job Description Name-Value Extractor - v8</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -99,17 +99,18 @@
             }
         });
 
-        function removeBulletCharacters(line) {
-           return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
-           //return line; 
+        function removeBulletCharacters2(line) {
+           //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
+           return line; 
         }
 
         function removeBulletCharacters(line) {
             var trimmedLine = line.trim();
             var firstSpace = line.indexOf(' ');
             var firstTab = line.indexOf('\t');
-            var lineP1;
-            var lineP2;
+            var lineP1 = "";
+            var lineP2 = "";
+            alert("test3");
             
             if (firstSpace > 0 && firstTab > 0) {
                 if (firstSpace < firstTab) {
@@ -154,8 +155,8 @@
         function parseDescription() {
             const text = document.getElementById('jobDesc').value;
             alert("test1");
-            const lines = text.split('\n').map(line => removeBulletCharacters(line.trim())).filter(Boolean);
-            alert("test2");
+            const lines = text.split('\n'); //.map(line => removeBulletCharacters(line.trim())).filter(Boolean);
+            alert("test4");
 
             const pairs = [];
 
@@ -170,7 +171,7 @@
                 { name: 'soft skills', keywords: ['communication', 'problem-solving', 'leadership', 'team'] }
             ];
 
-            alert("test3");
+            alert("test5");
             for (const line of lines) {
                 alert(line);
                 var lowerLine = line.toLower();
