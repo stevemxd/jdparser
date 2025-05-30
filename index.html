@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v4</h1>
+    <h1>Job Description Name-Value Extractor - v6</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -144,32 +144,6 @@
                 return trimmedLine;
             }          
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
-        }
-
-        function isCategoryOnly(string lowerLine) {
-            var colonOffset = lowerLine.atOffset(":");
-            
-            if (colonOffset >= 0 && lowerLine.length == colonOffset + 1)
-                return true;
-            else
-                return false;
-        }
-
-        function checkBulletCharacters(str) {
-          var chars = ['-','•','*','.',')','\u2022','\u2023','\u25E6','\u2043','\u2219'];
-          if (typeof str !== 'string' || !Array.isArray(chars)) {
-            throw new Error('Invalid input: str must be a string and chars must be an array.');
-          }
-
-          for (let char of chars) {
-                if (typeof char !== 'string' || char.length !== 1) {
-                    throw new Error('Invalid input: chars must be an array of single-character strings.');
-                }
-                if (str.includes(char)) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         function downloadCSV() {
