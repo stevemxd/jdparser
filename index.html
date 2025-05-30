@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v1</h1>
+    <h1>Job Description Name-Value Extractor - v2</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -185,22 +185,22 @@
                     alert("categoryOnly");    
                 } else {
                     bulletpoint = false;
-                    alert("standalone name-value pair");
                     currentCategoryDelimiterOffset = lowerLine.indexOf(":");
                     alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
 
-                    if (currentCategoryDelimiterOffset <= 0) {
+                    if (currentCategoryDelimiterOffset < 0) {
                         currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
+                        alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
                         
                         if (currentCategoryDelimiterOffset < 0)
                             bulletpoiint = true;
                         else
                             currentCategoryDelimiterOffset+=2;
                         
-                        alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
                     }
                     
                     if (bulletpoint == false) {
+                        alert("standalone name-value pair");
                         // Most likely a standalone name-value pair rather than a bulletpoint
                         currentCategory = lowerLine.substring(0,currentCategoryDelimiterOffset);
                         currentValue = lowerLine.substring(currentCategoryDelimiterOffset+1).trim();
