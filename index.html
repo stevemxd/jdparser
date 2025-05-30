@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v6</h1>
+    <h1>Job Description Name-Value Extractor - v7</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -99,7 +99,7 @@
             }
         });
 
-        function removeBulletCharacters2(line) {
+        function removeBulletCharacters(line) {
            return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
            //return line; 
         }
