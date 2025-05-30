@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v1</h1>
+    <h1>Job Description Name-Value Extractor - v2</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -145,7 +145,6 @@
 
         function isCategoryOnly(lowerLine) {
             var colonOffset = lowerLine.indexOf(":");
-            alert("isCategoryOnly");
             
             if (colonOffset >= 0 && lowerLine.length == colonOffset + 1)
                 return true;
@@ -155,9 +154,7 @@
 
         function parseDescription() {
             const text = document.getElementById('jobDesc').value;
-            alert("test1");
             const lines = text.split('\n'); //.map(line => removeBulletCharacters(line.trim())).filter(Boolean);
-            alert("test2");
             const pairs = [];
 
             const categories = [
@@ -170,11 +167,9 @@
                 { name: 'certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
                 { name: 'soft skills', keywords: ['communication', 'problem-solving', 'leadership', 'team'] }
             ];
-            alert("test3");
 
             for (const line of lines) {
-                alert("test4");
-                var lowerLine = line.toLower();
+                var lowerLine = line.toLowerCase();
                 var currentCategory = "";
                 var currentCategoryDelimiterOffset;   
                 var currentValue = "";
