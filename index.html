@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v7</h1>
+    <h1>Job Description Name-Value Extractor - v8</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -235,17 +235,19 @@
                             }
                         }
                     } else {
-                        alert("bulletpoint");
-                        currentValue = removeBulletCharacters(lowerLine);
-                        alert("currentCategory = "+currentCategory);
-                        alert("currentValue = "+currentValue);
-                        
-                        for (const category of categories) {
-                            for (const keyword of category.keywords) {
-                                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                                if (regex.test(currentCategory)) {
-                                    pairs.push({ name: currentCategory, value: currentValue });
-                                    break;
+                        if (lowerLine.length > 0) {
+                            alert("bulletpoint");
+                            currentValue = removeBulletCharacters(lowerLine);
+                            alert("currentCategory = "+currentCategory);
+                            alert("currentValue = "+currentValue);
+                            
+                            for (const category of categories) {
+                                for (const keyword of category.keywords) {
+                                    const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                                    if (regex.test(currentCategory)) {
+                                        pairs.push({ name: currentCategory, value: currentValue });
+                                        break;
+                                    }
                                 }
                             }
                         }
