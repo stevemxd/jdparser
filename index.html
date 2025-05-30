@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v1</h1>
+    <h1>Job Description Name-Value Extractor - v2</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -209,6 +209,16 @@
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
+                    for (const category of categories) {
+                        for (const keyword of category.keywords) {
+                            const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                            if (regex.test(currentCategory)) {
+                                currentCategory = category.name;
+                                break;
+                            }
+                        }
+                    }
+
                     //alert("categoryOnly - "+currentCategory);    
                 } else {
                     bulletpoint = false;
