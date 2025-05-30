@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v8</h1>
+    <h1>Job Description Name-Value Extractor - v9</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -127,9 +127,9 @@
             var firstTab = line.indexOf('\t');
             var lineP1 = "";
             var lineP2 = "";
-            alert("removedBulletCharacters-1");
+            //alert("removedBulletCharacters-1");
             if (firstSpace > 0 && firstTab > 0) {
-                alert("removedBulletCharacters-2");
+                //alert("removedBulletCharacters-2");
                 if (firstSpace < firstTab) {
                     lineP1 = line.substring(0,firstSpace);
                     lineP2 = line.substring(firstSpace);
@@ -139,25 +139,25 @@
                 }
             } else {
                 if (firstSpace >= 0 && firstTab == -1) {
-                    alert("removedBulletCharacters-3");
+                    //alert("removedBulletCharacters-3");
                     lineP1 = line.substring(0,firstSpace);
                     lineP2 = line.substring(firstSpace);
                 } else if (firstTab >= 0 && firstSpace == -1) {
-                    alert("removedBulletCharacters-4");
+                    //alert("removedBulletCharacters-4");
                     lineP1 = line.substring(0,firstTab);
                     lineP2 = line.substring(firstTab);
                 } else {
-                    alert("removedBulletCharacters-5");
+                    //alert("removedBulletCharacters-5");
                     lineP1 = '';
                     lineP2 = trimmedLine;
                 }
             }
             
             if (checkBulletCharacters(lineP1)) {
-                alert("checkBulletCharacters - bulletpoint found - "+lineP1);
+                //alert("checkBulletCharacters - bulletpoint found - "+lineP1);
                 return lineP2.trim();
             } else {
-                alert("checkBulletCharacters - bulletpoint not found - "+lineP1);
+                //alert("checkBulletCharacters - bulletpoint not found - "+lineP1);
                 return trimmedLine;
             }          
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
@@ -195,7 +195,7 @@
                 var currentValue = "";
                 var bulletpoint = false;
                 
-                alert("lowerLine = "+lowerLine);
+                //alert("lowerLine = "+lowerLine);
                 
                 if (lowerLine.indexOf("description") >= 0)
                     ; // ignore lines which likely contain no name-value pairs or category declarations
@@ -203,15 +203,15 @@
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
-                    alert("categoryOnly - "+currentCategory);    
+                    //alert("categoryOnly - "+currentCategory);    
                 } else {
                     bulletpoint = false;
                     currentCategoryDelimiterOffset = lowerLine.indexOf(":");
-                    alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
+                    //alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
 
                     if (currentCategoryDelimiterOffset < 0) {
                         currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
-                        alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
+                        //alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
                         
                         if (currentCategoryDelimiterOffset < 0)
                             bulletpoint = true;
@@ -221,7 +221,7 @@
                     }
                     
                     if (bulletpoint == false) {
-                        alert("standalone name-value pair");
+                        //alert("standalone name-value pair");
                         // Most likely a standalone name-value pair rather than a bulletpoint
                         currentCategory = lowerLine.substring(0,currentCategoryDelimiterOffset);
                         currentValue = lowerLine.substring(currentCategoryDelimiterOffset+1).trim();
@@ -236,10 +236,10 @@
                         }
                     } else {
                         if (lowerLine.length > 0) {
-                            alert("bulletpoint");
+                            //alert("bulletpoint");
                             currentValue = removeBulletCharacters(lowerLine);
-                            alert("currentCategory = "+currentCategory);
-                            alert("currentValue = "+currentValue);
+                            //alert("currentCategory = "+currentCategory);
+                            //alert("currentValue = "+currentValue);
                             
                             for (const category of categories) {
                                 for (const keyword of category.keywords) {
