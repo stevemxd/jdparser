@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v9</h1>
+    <h1>Job Description Name-Value Extractor - v2</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -45,10 +45,6 @@
     <pre id="output"></pre>
 
     <script>
-        function parseDescription() {
-            alert("parseDescription");
-        }
-        
         const dropzone = document.getElementById('dropzone');
 
         dropzone.addEventListener('dragover', (e) => {
@@ -144,6 +140,87 @@
                 return trimmedLine;
             }          
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
+        }
+
+        function isCategoryOnly(string lowerLine) {
+            var colonOffset = lowerLine.indexOf(":");
+            
+            if (colonOffset >= 0 && lowerLine.length == colonOffset + 1)
+                return true;
+            else
+                return false;
+        }
+
+        function parseDescription() {
+            alert("parseDescription");
+            const text = document.getElementById('jobDesc').value;
+            const lines = text.split('\n').map(line => removeBulletCharacters(line.trim())).filter(Boolean);
+
+            const pairs = [];
+
+            const categories = [
+                { name: 'job title', keywords: ['title', 'position', 'role'] },
+                { name: 'location', keywords: ['location', 'based in'] },
+                { name: 'experience', keywords: ['experience', 'years'] },
+                { name: 'skills', keywords: ['skills', 'technologies', 'tools'] },
+                { name: 'responsibilities', keywords: ['responsible', 'responsibilities', 'duties'] },
+                { name: 'education', keywords: ['degree', 'education', 'bachelor', 'master'] },
+                { name: 'certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
+                { name: 'soft skills', keywords: ['communication', 'problem-solving', 'leadership', 'team'] }
+            ];
+
+            for (const line of lines) {
+                var lowerLine = line.toLower();
+                var currentCategory = "";
+                var currentCategoryDelimiterOffset;   
+                var currentValue = "";
+                
+                alert(lowerLine);
+                if (lowerLine.indexOf("description") >= 0)
+                    break; // ignore lines which likely contain no name-value pairs or category declarations
+
+                if (isCategoryOnly(lowerLine)) {
+                    // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
+                    // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
+                    currentCategory = lowerLine.substring(0,lowerLine.length - 1);
+                    break;
+                }
+                    
+                currentCategoryDelimiterOffset = lowerLine.indexOf(":");
+                if (currentCategoryDelimiterOffset <= 0)
+                    currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
+                    
+                if (currentCategoryDelimiterOffset >= 0) {
+                    // Most likely a standalone name-value pair rather than a bulletpoint
+                    currentCategory = lowerLine.substring(0,currentCategoryDelimiterOffset);
+                    currentValue = lowerLine.substring(currentCategoryDelimiterOffset+1).trim();
+                    for (const category of categories) {
+                        for (const keyword of category.keywords) {
+                            const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                            if (regex.test(currentCategory)) {
+                                pairs.push({ name: category.name, value: currentValue });
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // Most likely a separate value-only line - possibly a bulletpoint - followinng a previously declared category
+//                    .map(line => removeBulletCharacters(line.trim())).filter(Boolean);
+                }
+            }
+            const seen = new Set();
+            const uniquePairs = [];
+
+            for (const pair of pairs) {
+                const key = `${pair.name}:${pair.value}`;
+                if (!seen.has(key)) {
+                    uniquePairs.push(pair);
+                    seen.add(key);
+                }
+            }
+
+            window.extractedPairs = uniquePairs;
+            document.getElementById('output').textContent = JSON.stringify(uniquePairs, null, 2);
         }
 
         function downloadCSV() {
