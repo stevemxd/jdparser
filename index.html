@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v2</h1>
+    <h1>Job Description Name-Value Extractor - v3</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -110,7 +110,6 @@
             var firstTab = line.indexOf('\t');
             var lineP1 = "";
             var lineP2 = "";
-            alert("test3");
             
             if (firstSpace > 0 && firstTab > 0) {
                 if (firstSpace < firstTab) {
@@ -184,7 +183,7 @@
                 } else {
                     currentCategoryDelimiterOffset = lowerLine.indexOf(":");
                     if (currentCategoryDelimiterOffset <= 0)
-                        currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
+                        currentCategoryDelimiterOffset = lowerLine.indexOf(" - ")+2;
                     
                     if (currentCategoryDelimiterOffset >= 0) {
                         // Most likely a standalone name-value pair rather than a bulletpoint
@@ -200,8 +199,16 @@
                             }
                         }
                     } else {
-                    // Most likely a separate value-only line - possibly a bulletpoint - followinng a previously declared category
-//                    .map(line => removeBulletCharacters(line.trim())).filter(Boolean);
+                        currentValue = lowerLine.substring(currentCategoryDelimiterOffset+1).trim();
+                        for (const category of categories) {
+                            for (const keyword of category.keywords) {
+                                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                                if (regex.test(currentCategory)) {
+                                    pairs.push({ name: currentCategory, value: currentValue });
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
