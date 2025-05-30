@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v4</h1>
+    <h1>Job Description Name-Value Extractor - v5</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -160,7 +160,7 @@
                 { name: 'job title', keywords: ['title', 'position', 'role'] },
                 { name: 'location', keywords: ['location', 'based in'] },
                 { name: 'experience', keywords: ['experience', 'years'] },
-                { name: 'skills', keywords: ['skills', 'technologies', 'tools'] },
+                { name: 'skills', keywords: ['qualifications', 'skills', 'technologies', 'tools'] },
                 { name: 'responsibilities', keywords: ['responsible', 'responsibilities', 'duties'] },
                 { name: 'education', keywords: ['degree', 'education', 'bachelor', 'master'] },
                 { name: 'certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
@@ -173,7 +173,6 @@
                 var currentCategoryDelimiterOffset;   
                 var currentValue = "";
                 
-                alert(lowerLine);
                 if (lowerLine.indexOf("description") >= 0)
                     ; // ignore lines which likely contain no name-value pairs or category declarations
                 else if (isCategoryOnly(lowerLine)) {
@@ -200,6 +199,7 @@
                         }
                     } else {
                         currentValue = removeBulletCharacters(lowerLine);
+                        alert("currentValue = "+currentValue);
                         
                         for (const category of categories) {
                             for (const keyword of category.keywords) {
