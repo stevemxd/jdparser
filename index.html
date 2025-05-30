@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v5</h1>
+    <h1>Job Description Name-Value Extractor - v6</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -105,7 +105,7 @@
         }
 
         function checkBulletCharacters(str) {
-          var chars = ['-','•','*','\u2022','\u2023','\u25E6','\u2043','\u2219'];
+          var chars = ['-','•','*','.','\u2022','\u2023','\u25E6','\u2043','\u2219'];
           if (typeof str !== 'string' || !Array.isArray(chars)) {
             throw new Error('Invalid input: str must be a string and chars must be an array.');
           }
@@ -154,10 +154,10 @@
             }
             
             if (checkBulletCharacters(lineP1)) {
-                alert("bulletpoint found - "+lineP1);
+                alert("checkBulletCharacters - bulletpoint found - "+lineP1);
                 return lineP2.trim();
             } else {
-                alert("bulletpoint not found - "+lineP1);
+                alert("checkBulletCharacters - bulletpoint not found - "+lineP1);
                 return trimmedLine;
             }          
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
@@ -203,7 +203,7 @@
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
-                    alert("categoryOnly");    
+                    alert("categoryOnly - "+currentCategory);    
                 } else {
                     bulletpoint = false;
                     currentCategoryDelimiterOffset = lowerLine.indexOf(":");
