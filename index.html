@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v6</h1>
+    <h1>Job Description Name-Value Extractor - v7</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -142,6 +142,15 @@
             //return line.replace(/^[-•*\u2022\u2023\u25E6\u2043\u2219]+\s*/, '');
         }
 
+        function isCategoryOnly(string lowerLine) {
+            var colonOffset = lowerLine.indexOf(":");
+            
+            if (colonOffset >= 0 && lowerLine.length == colonOffset + 1)
+                return true;
+            else
+                return false;
+        }
+
         function parseDescription1() {
             alert("parseDescription");
             const text = document.getElementById('jobDesc').value;
@@ -167,7 +176,7 @@
                 var currentValue = "";
                 
                 alert(lowerLine);
-                if (lowerLine.atOffset("description") >= 0)
+                if (lowerLine.indexOf("description") >= 0)
                     break; // ignore lines which likely contain no name-value pairs or category declarations
 
                 if (isCategoryOnly(lowerLine)) {
@@ -177,9 +186,9 @@
                     break;
                 }
                     
-                currentCategoryDelimiterOffset = lowerLine.atOffset(":");
+                currentCategoryDelimiterOffset = lowerLine.indexOf(":");
                 if (currentCategoryDelimiterOffset <= 0)
-                    currentCategoryDelimiterOffset = lowerLine.atOffset(" - ");
+                    currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
                     
                 if (currentCategoryDelimiterOffset >= 0) {
                     // Most likely a standalone name-value pair rather than a bulletpoint
