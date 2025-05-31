@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v2</h1>
+    <h1>Job Description Name-Value Extractor - v3</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -173,21 +173,21 @@
         }
 
         function suggestCategory(description) {
-            if (description.indexOf("required"))
+            if (description.indexOf("required") >= 0)
                 return "required";
-            else if (description.indexOf("must"))
+            else if (description.indexOf("must") >= 0)
                 return "required";
-            else if (description.indexOf("at keast"))
+            else if (description.indexOf("at keast") >= 0)
                 return "required";
-            else if (description.indexOf("minimum"))
+            else if (description.indexOf("minimum") >= 0)
                 return "required";
-            else if (description.indexOf("preferred"))
+            else if (description.indexOf("preferred") >= 0)
                 return "preferred";
-            else if (description.indexOf("nice to have"))
+            else if (description.indexOf("nice to have") >= 0)
                 return "preferred";
-            else if (description.indexOf("nice-to-have"))
+            else if (description.indexOf("nice-to-have") >= 0)
                 return "preferred";
-            else if (description.indexOf("bonus"))
+            else if (description.indexOf("bonus") >= 0)
                 return "preferred";
             else
                 return "required";
