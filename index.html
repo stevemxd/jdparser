@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v7</h1>
+    <h1>Job Description Name-Value Extractor - v1</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -172,6 +172,27 @@
                 return false;
         }
 
+        function suggestCategory(description) {
+            if (description.indexOf("required")
+                return "required";
+            else if (description.indexOf("must")
+                return "required";
+            else if (description.indexOf("at keast")
+                return "required");
+            else if (description.indexOf("minimum")
+                return "required");
+            else if (description.indexOf("preferred")
+                return "preferred");
+            else if (description.indexOf("nice to have")
+                return "preferred");
+            else if (description.indexOf("nice-to-have")
+                return "preferred");
+            else if (description.indexOf("bonus")
+                return "preferred");
+            else
+                return "required";
+        }
+        
         function parseDescription() {
             const text = document.getElementById('jobDesc').value;
             const lines = text.split('\n'); //.map(line => removeBulletCharacters(line.trim())).filter(Boolean);
@@ -274,7 +295,10 @@
                                     }
                                 }
                             }
-                        }
+                            if (currentCategory.trim(length) == 0)
+                                currentCategory = suggestCategory(currentValue);
+                                pairs.push({ name: currentCategory, value: currentValue });
+                            }
                     }
                 }
             }
