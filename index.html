@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v6</h1>
+    <h1>Job Description Name-Value Extractor - v7</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -190,7 +190,7 @@
             ];
 
             for (const line of lines) {
-                var lowerLine = line.toLowerCase();
+                var lowerLine = line.trim().toLowerCase();
                 var currentCategoryDelimiterOffset;   
                 var currentValue = "";
                 var bulletpoint = false;
@@ -216,12 +216,12 @@
                             break;
                         for (const keyword of category.keywords) {
                             const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                            alert("lowerLine - "+lowerLine);
-                            alert("currentCategory before regex.test - keyword: "+keyword+", category"+category+", currentCategory: "+currentCategory);
+                            //alert("lowerLine - "+lowerLine);
+                            //alert("currentCategory before regex.test - keyword: "+keyword+", category"+category+", currentCategory: "+currentCategory);
                             if (regex.test(currentCategory)) {
                                 currentCategory = category.name;
                                 categoryFound = true;
-                                alert("currentCategory after regex.test - "+currentCategory);
+                                //alert("currentCategory after regex.test - "+currentCategory);
                                 break;
                             }
                         }
