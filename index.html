@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v5</h1>
+    <h1>Job Description Name-Value Extractor - v6</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -173,7 +173,47 @@
         }
 
         function suggestCategory(description) {
-            if (description.indexOf("required") >= 0)
+            if (description.indexOf("developer") >= 0)
+                return "position";
+            else if (description.indexOf("owner") >= 0)
+                return "position";
+            else if (description.indexOf("chairman") >= 0)
+                return "position";
+            else if (description.indexOf("ceo") >= 0)
+                return "position";
+            else if (description.indexOf("coo") >= 0)
+                return "position";
+            else if (description.indexOf("cto") >= 0)
+                return "position";
+            else if (description.indexOf("cfo") >= 0)
+                return "position";
+            else if (description.indexOf("officer") >= 0)
+                return "position";
+            else if (description.indexOf("president") >= 0)
+                return "position";
+            else if (description.indexOf("vice president") >= 0)
+                return "position";
+            else if (description.indexOf("director") >= 0)
+                return "position";
+            else if (description.indexOf("architect") >= 0)
+                return "position";
+            else if (description.indexOf("developer") >= 0)
+                return "position";
+            else if (description.indexOf("assistant") >= 0)
+                return "position";
+            else if (description.indexOf("specialist") >= 0)
+                return "position";
+            else if (description.indexOf("designer") >= 0)
+                return "position";
+            else if (description.indexOf("writter") >= 0)
+                return "position";
+            else if (description.indexOf("lead") >= 0)
+                return "position";
+            else if (description.indexOf("tester") >= 0)
+                return "position";
+            else if (description.indexOf("principal") >= 0)
+                return "position";
+            else if (description.indexOf("required") >= 0)
                 return "required";
             else if (description.indexOf("must") >= 0)
                 return "required";
