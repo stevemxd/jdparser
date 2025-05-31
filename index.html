@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v6</h1>
+    <h1>Job Description Name-Value Extractor - v7</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -172,7 +172,7 @@
                 return false;
         }
 
-        function suggestCategory(description) {
+        function suggestPosition(description) {
             if (description.indexOf("developer") >= 0)
                 return "position";
             else if (description.indexOf("owner") >= 0)
@@ -213,7 +213,12 @@
                 return "position";
             else if (description.indexOf("principal") >= 0)
                 return "position";
-            else if (description.indexOf("required") >= 0)
+            else
+                return "";
+        }
+        
+        function suggestCategory(description) {
+            if (description.indexOf("required") >= 0)
                 return "required";
             else if (description.indexOf("must") >= 0)
                 return "required";
@@ -264,6 +269,7 @@
                 var currentValue = "";
                 var bulletpoint = false;
                 var categoryFound = false;
+                var currentPosition = "";
                 
                 //alert("lowerLine = "+lowerLine);
                 
@@ -343,6 +349,9 @@
                                     }
                                 }
                             }
+                            if (currentPosition.length == 0)
+                                currentPosition = suggestPosition(currentValue);
+                            
                             if (currentCategory.trim(length) == 0)
                                 currentCategory = suggestCategory(currentValue);
                                 pairs.push({ name: currentCategory, value: currentValue });
