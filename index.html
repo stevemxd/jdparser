@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v3</h1>
+    <h1>Job Description Name-Value Extractor - v4</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -279,11 +279,15 @@
                     // ignore blank lines
                     // clear currentCategory
                     currentCategory = "";
-                } else if (lowerLine.indexOf("description") >= 0) {
+                    categoryFound = true;
+                    
+                if (categoryFound == false && lowerLine.indexOf("description") >= 0) {
                     // ignore lines containing "description" which are likely just titles without names or values
                     // clear currentCategory
                     currentCategory = "";
-                } else if (isCategoryOnly(lowerLine)) {
+                    categoryFound == true;
+
+                if (categoryFound == false && isCategoryOnly(lowerLine)) {
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
@@ -337,43 +341,43 @@
                                 break;
                         }
                     }   
+                }
                     
-                    if (categoryFound == false) {
-                        // if position not yet defined, check for position keyword
-                        if (currentPosition.length == 0) {
-                            currentPosition = suggestPosition(currentValue);
-                            if (currentPosition.length > 0) {
-                                pairs.push({ name: currentPosition, value: currentValue });
-                                categoryFound = true;
-                            }
-                        }
-                    }                                
-
-                    if (categoryFound == false) {
-                        // remove bulletpoints if they exist
-                        currentValue = removeBulletCharacters(lowerLine);
-                        if (currentCategory.length > 0) {            
-                            for (const category of categories) {
-                                for (const keyword of category.keywords) {
-                                    const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                                    if (regex.test(currentCategory)) {
-                                        pairs.push({ name: currentCategory, value: currentValue });
-                                        categoryFound = true;
-                                        break;
-                                    }
-                                }
-                                if (categoryFound == true);
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (currentCategory.length > 0) {
-                        if (currentCategory.length > 0) {
-                            // suggested category identified
-                            pairs.push({ name: currentCategory, value: currentValue });
+                if (categoryFound == false) {
+                    // if position not yet defined, check for position keyword
+                    if (currentPosition.length == 0) {
+                        currentPosition = suggestPosition(currentValue);
+                        if (currentPosition.length > 0) {
+                            pairs.push({ name: currentPosition, value: currentValue });
                             categoryFound = true;
                         }
+                    }
+                }                                
+
+                if (categoryFound == false) {
+                    // remove bulletpoints if they exist
+                    currentValue = removeBulletCharacters(lowerLine);
+                    if (currentCategory.length > 0) {            
+                        for (const category of categories) {
+                            for (const keyword of category.keywords) {
+                                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                                if (regex.test(currentCategory)) {
+                                    pairs.push({ name: currentCategory, value: currentValue });
+                                    categoryFound = true;
+                                    break;
+                                }
+                            }
+                            if (categoryFound == true);
+                                break;
+                        }
+                    }
+                }
+
+                if (categoryFound == false) {
+                    if (currentCategory.length > 0) {
+                        // suggested category identified
+                        pairs.push({ name: currentCategory, value: currentValue });
+                        categoryFound = true;
                     } else {
                         currentCategory = suggestCategory(currentValue);
                         if (currentCategory.length > 0) {
