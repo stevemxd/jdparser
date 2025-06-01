@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v5</h1>
+    <h1>Job Description Name-Value Extractor - v6</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -358,10 +358,9 @@
                                 
                                 if (currentCategory.trim(length) == 0) {
                                     currentCategory = suggestCategory(currentValue);
-                                    pairs.push({ name: currentCategory, value: currentValue });
-                                    
-                                    if (currentCategory.length == 0) {
-                                        alert("undefinedCategory");
+                                    if (currentCategory.length > 0) {
+                                        pairs.push({ name: currentCategory, value: currentValue });
+                                    else
                                         var undefinedCategory = "miscellaneous";
                                         pairs.push({ name: undefinedCategory, value: currentValue });
                                     }
