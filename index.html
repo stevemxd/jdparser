@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v4</h1>
+    <h1>Job Description Name-Value Extractor - v5</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -280,13 +280,15 @@
                     // clear currentCategory
                     currentCategory = "";
                     categoryFound = true;
-                    
+                }
+                
                 if (categoryFound == false && lowerLine.indexOf("description") >= 0) {
                     // ignore lines containing "description" which are likely just titles without names or values
                     // clear currentCategory
                     currentCategory = "";
                     categoryFound == true;
-
+                }
+                
                 if (categoryFound == false && isCategoryOnly(lowerLine)) {
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
