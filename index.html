@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v7</h1>
+    <h1>Job Description Name-Value Extractor - v1</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -230,7 +230,7 @@
                 return "preferred";
             else if (description.indexOf("nice-to-have") >= 0)
                 return "preferred";
-            else if (description.indexOf("bonus") >= 0)
+            else if (description.indexOf("bonus") >= 0 && description.indexOf("base") == 0 && description.indexOf("salary") == 0 && description.indexOf("+") == 0)
                 return "preferred";
             else if (description.indexOf("onsite") >= 0)
                 return "location";
@@ -252,7 +252,8 @@
             const pairs = [];
             var currentCategory = "";
             var currentPosition = "";
-
+            var standaloneNameValuePair = false;
+            
             const categories = [
                 { name: 'job title', keywords: ['title', 'position', 'role'] },
                 { name: 'location', keywords: ['location', 'based in'] },
@@ -270,6 +271,7 @@
                 var currentValue = "";
                 var bulletpoint = false;
                 var categoryFound = false;
+                var nameValuePairFound = false;
                 
                 //alert("lowerLine = "+lowerLine);
                 
@@ -277,11 +279,11 @@
                     // ignore blank lines
                     // clear currentCategory
                     currentCategory = "";
-                } else if (lowerLine.indexOf("description") >= 0)
-                    // ignore lines which likely contain no name-value pairs or category declarations
+                } else if (lowerLine.indexOf("description") >= 0) {
+                    // ignore lines containing "description" which are likely just titles without names or values
                     // clear currentCategory
                     currentCategory = "";
-                else if (isCategoryOnly(lowerLine)) {
+                } else if (isCategoryOnly(lowerLine)) {
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
@@ -301,25 +303,23 @@
                             }
                         }
                     }
+                }
 
-                    //alert("categoryOnly - "+currentCategory);    
-                } else {
-                    bulletpoint = false;
-                    currentCategoryDelimiterOffset = lowerLine.indexOf(":");
-                    //alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
-
-                    if (currentCategoryDelimiterOffset < 0) {
-                        currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
-                        //alert("currentCategoryDelimiterOffset = "+currentCategoryDelimiterOffset.toString());
-                        
-                        if (currentCategoryDelimiterOffset < 0)
-                            bulletpoint = true;
-                        else
-                            currentCategoryDelimiterOffset+=2;
-                        
-                    }
+                if (categoryFound == false) {
+                    standaloneNameValuePair = false;
                     
-                    if (bulletpoint == false) {
+                    currentCategoryDelimiterOffset = lowerLine.indexOf(":");
+                    if (currentCategoryDelimiterOffset > 0) 
+                        standaloneNameValuePair = true;
+                    else {
+                        currentCategoryDelimiterOffset = lowerLine.indexOf(" - ");
+                        
+                        if (currentCategoryDelimiterOffset > 0) {
+                            standaloneNameValuePair = true;
+                            currentCategoryDelimiterOffset+=2;
+                        }
+                    }
+                    if (standaloneNameValuePair == true) {
                         //alert("standalone name-value pair");
                         // Most likely a standalone name-value pair rather than a bulletpoint
                         currentCategory = lowerLine.substring(0,currentCategoryDelimiterOffset);
@@ -329,45 +329,64 @@
                                 const regex = new RegExp(`\\b${keyword}\\b`, 'i');
                                 if (regex.test(currentCategory)) {
                                     pairs.push({ name: category.name, value: currentValue });
+                                    categoryFound = true;
                                     break;
                                 }
                             }
+                            if (categoryFound == true)
+                                break;
                         }
-                    } else {
-                        if (lowerLine.length > 0) {
-                            //alert("bulletpoint");
-                            currentValue = removeBulletCharacters(lowerLine);
-                            //alert("currentCategory = "+currentCategory);
-                            //alert("currentValue = "+currentValue);
-                            
-                            if (currentPosition.length == 0) {
-                                currentPosition = suggestPosition(currentValue);
-                                if (currentPosition.length > 0)
-                                    pairs.push({ name: currentPosition, value: currentValue });
-
-                            } else {
-                                for (const category of categories) {
-                                    for (const keyword of category.keywords) {
-                                        const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                                        if (regex.test(currentCategory)) {
-                                            pairs.push({ name: currentCategory, value: currentValue });
-                                            break;
-                                        }
-                                    }
-                                }
-                                
-                                if (currentCategory.trim(length) == 0) {
-                                    currentCategory = suggestCategory(currentValue);
-                                    if (currentCategory.length > 0) 
-                                        pairs.push({ name: currentCategory, value: currentValue });
-                                    else {
-                                        var undefinedCategory = "miscellaneous";
-                                        pairs.push({ name: undefinedCategory, value: currentValue });
-                                    }
-                                    currentCategory = "";
-                                }
+                    }   
+                    
+                    if (categoryFound == false) {
+                        // if position not yet defined, check for position keyword
+                        if (currentPosition.length == 0) {
+                            currentPosition = suggestPosition(currentValue);
+                            if (currentPosition.length > 0) {
+                                pairs.push({ name: currentPosition, value: currentValue });
+                                categoryFound = true;
                             }
                         }
+                    }                                
+
+                    if (categoryFound == false) {
+                        // remove bulletpoints if they exist
+                        currentValue = removeBulletCharacters(lowerLine);
+                        if (currentCategory.length > 0) {            
+                            for (const category of categories) {
+                                for (const keyword of category.keywords) {
+                                    const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                                    if (regex.test(currentCategory)) {
+                                        pairs.push({ name: currentCategory, value: currentValue });
+                                        categoryFound = true;
+                                        break;
+                                    }
+                                }
+                                if categoryFound == true;
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (currentCategory.length > 0) {
+                        if (currentCategory.length > 0) {
+                            // suggested category identified
+                            pairs.push({ name: currentCategory, value: currentValue });
+                            categoryFound = true;
+                        }
+                    else {
+                        currentCategory = suggestCategory(currentValue);
+                        if (currentCategory.length > 0) {
+                            // suggested category identified
+                            pairs.push({ name: currentCategory, value: currentValue });
+                            categoryFound = true;
+                        } else {
+                            // undefined 
+                            var undefinedCategory = "miscellaneous";
+                            pairs.push({ name: undefinedCategory, value: currentValue });
+                            categoryFound = true;
+                        }
+                        currentCategory = "";
                     }
                 }
             }
