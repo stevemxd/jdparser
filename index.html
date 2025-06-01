@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v1</h1>
+    <h1>Job Description Name-Value Extractor - v2</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -349,9 +349,8 @@
                     // if position not yet defined, check for position keyword
                     if (currentPosition.length == 0) {
                         currentPosition = suggestPosition(lowerLine);
-                        alert("currentPosition: "+currentPosition+", currentValue: "+lowerLine);
                         if (currentPosition.length > 0) {
-                            pairs.push({ name: "position", value: currentValue });
+                            pairs.push({ name: "position", value: lowerLine });
                             categoryFound = true;
                         }
                     }
