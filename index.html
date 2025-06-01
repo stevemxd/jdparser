@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Job Description Name-Value Extractor - v6</h1>
+    <h1>Job Description Name-Value Extractor - v7</h1>
     <div class="dropzone" id="dropzone">Drop a text, PDF, or DOCX file here or paste your job description below</div>
     <textarea id="jobDesc" placeholder="Paste your job description here..."></textarea>
     <br>
@@ -311,7 +311,7 @@
                     }
                 }
 
-                if (categoryFound == false and checkBulletCharacters(lowerLine.substring(0,3) == false) {
+                if (categoryFound == false && checkBulletCharacters(lowerLine.substring(0,3) == false) {
                     standaloneNameValuePair = false;
                     
                     currentCategoryDelimiterOffset = lowerLine.indexOf(":");
