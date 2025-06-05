@@ -172,80 +172,94 @@
                 return false;
         }
 
-        function suggestPosition(description) {
+        function isPosition(description) {
             if (description.indexOf("developer") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("owner") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("chairman") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("ceo") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("coo") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("cto") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("cfo") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("officer") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("president") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("vice president") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("director") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("architect") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("developer") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("assistant") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("specialist") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("designer") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("writer") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("lead") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("tester") >= 0)
-                return "position";
+                return true;
             else if (description.indexOf("principal") >= 0)
-                return "position";
+                return true;
             else
-                return "";
+                return false;
         }
         
-        function suggestCategory(description) {
+        function isRequired(description) {
             if (description.indexOf("required") >= 0)
-                return "required";
+                return true;
             else if (description.indexOf("must") >= 0)
-                return "required";
+                return true;
             else if (description.indexOf("at keast") >= 0)
-                return "required";
+                return true;
             else if (description.indexOf("minimum") >= 0)
-                return "required";
+                return true;
             else if (description.indexOf("experience") >= 0)
-                return "required";
-            else if (description.indexOf("preferred") >= 0)
-                return "preferred";
-            else if (description.indexOf("nice-to-have") >= 0)
-                return "preferred";
-            else if (description.indexOf("bonus") >= 0 && description.indexOf("base") == 0 && description.indexOf("salary") == 0 && description.indexOf("+") == 0)
-                return "preferred";
-            else if (description.indexOf("onsite") >= 0)
-                return "location";
-            else if (description.indexOf("on-site") >= 0)
-                return "location";
-            else if (description.indexOf("on site") >= 0)
-                return "location";
-            else if (description.indexOf("hybrid") >= 0)
-                return "location";
-            else if (description.indexOf("remote") >= 0)
-                return "location";
+                return true;
             else
-                return "";
+                return false;
+        }
+
+        function isPreferred(description) {
+            if (description.indexOf("preferred") >= 0)
+                return true;
+            else if (description.indexOf("nice-to-have") >= 0)
+                return true;
+            else if (description.indexOf("bonus") >= 0 && description.indexOf("base") == 0 && description.indexOf("salary") == 0 && description.indexOf("+") == 0)
+                return true;
+            else
+                return false;
+        }
+        
+        function isLocation(description) {
+            if (description.indexOf("location") >= 0
+                return true;
+            else if (description.indexOf("based in") >= 0)
+                return true;
+            else if (description.indexOf("onsite") >= 0)
+                return true;
+            else if (description.indexOf("on-site") >= 0)
+                return true;
+            else if (description.indexOf("on site") >= 0)
+                return true;
+            else if (description.indexOf("hybrid") >= 0)
+                return true;
+            else if (description.indexOf("remote") >= 0)
+                return true;
+            else
+                return false;
         }
         
         function parseDescription() {
@@ -253,18 +267,19 @@
             const lines = text.split('\n'); //.map(line => removeBulletCharacters(line.trim())).filter(Boolean);
             const pairs = [];
             var currentCategory = "";
-            var currentPosition = "";
+            var currentPosition = false;
+            var currentLocation = false;
             var standaloneNameValuePair = false;
             
+//                { name: 'requirements', keywords: ['experience', 'years'] },
+//                { name: 'location', keywords: ['location', 'based in'] },
             const categories = [
                 { name: 'job title', keywords: ['title', 'position', 'role'] },
-                { name: 'location', keywords: ['location', 'based in'] },
-                { name: 'requirements', keywords: ['experience', 'years'] },
                 { name: 'skills', keywords: ['qualifications', 'skills', 'technologies', 'tools'] },
                 { name: 'responsibilities', keywords: ['responsible', 'responsibilities', 'duties'] },
                 { name: 'education', keywords: ['degree', 'education', 'bachelor', 'master'] },
-                { name: 'certifications', keywords: ['certification', 'certified', 'PMP', 'AWS'] },
-                { name: 'soft skills', keywords: ['communication', 'problem-solving', 'leadership', 'team'] }
+                { name: 'certifications', keywords: ['certification', 'certified', 'certificate'] },
+                { name: 'soft skills', keywords: ['communication', 'communicator', 'problem-solving', 'problem solving', 'problem solver', 'leadership', 'leader', 'mentor', 'presenter', 'presentation', 'speaker', 'speaking'] }
             ];
 
             for (const line of lines) {
@@ -274,6 +289,7 @@
                 var bulletpoint = false;
                 var categoryFound = false;
                 var nameValuePairFound = false;
+                var currentPriority = "";
                 
                 //alert("lowerLine = "+lowerLine);
                 
@@ -291,11 +307,15 @@
                     categoryFound = true;
                 }
                 
-                if (categoryFound == false && isCategoryOnly(lowerLine)) {
+                if (isRequired(lowerLine)
+                    currentPriority = "Required";
+                else if (isPreferred(lowerLine)
+                    currentPriority = "Preferred";
+
+                if (categoryFound == false) {
                     // Most likely a standalone category declaration with values to follow on separate lines, possibly as bulletpoints
                     // Examples: Required Skills, Preferred Skills, Nice-to-have Skills, Bonus Skills 
                     currentCategory = lowerLine.substring(0,lowerLine.length - 1);
-                    categoryFound = false;    
                     for (const category of categories) {
                         if (categoryFound)
                             break;
@@ -347,11 +367,22 @@
                     }   
                 }
                     
+               if (categoryFound == false) {
+                    // if location not yet defined, check for location keyword
+                    if (currentLocation == false) {
+                        currentLocation = isLocation(lowerLine);
+                        if (currentLocation == true) {
+                            pairs.push({ name: "location", value: lowerLine });
+                            categoryFound = true;
+                        }
+                    }
+                }                                
+
                 if (categoryFound == false) {
                     // if position not yet defined, check for position keyword
-                    if (currentPosition.length == 0) {
-                        currentPosition = suggestPosition(lowerLine);
-                        if (currentPosition.length > 0) {
+                    if (currentPosition == false) {
+                        currentPosition = isPosition(lowerLine);
+                        if (currentPosition == true) {
                             pairs.push({ name: "position", value: lowerLine });
                             categoryFound = true;
                         }
